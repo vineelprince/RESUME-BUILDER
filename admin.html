@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h2>Logged-in Users</h2>
+    <ul id="userList"></ul>
+
+    <script>
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/admin/users');
+                if (!response.ok) throw new Error("Failed to fetch users");
+    
+                const users = await response.json();
+                const userList = document.getElementById('userList');
+    
+                if (users.length === 0) {
+                    userList.innerHTML = "<li>No users have logged in yet.</li>";
+                    return;
+                }
+    
+                userList.innerHTML = users.map(user => 
+                    `<li>${user.email} - Last Login: ${user.lastLogin || 'Never'}</li>`).join('');
+            } catch (error) {
+                console.error(error);
+                alert("Error fetching users. Please try again.");
+            }
+        }
+    
+        // Fetch users on page load and every 10 seconds
+        fetchUsers();
+        setInterval(fetchUsers, 10000);
+    </script>
+    
+</body>
+</html>

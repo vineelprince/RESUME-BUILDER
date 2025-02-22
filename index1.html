@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login.css"> <!-- Add your CSS file here -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <p class="register-link">Don't have an account? <a href="register.html">Register</a></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+    
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+    
+            try {
+                const response = await fetch('/login', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok && data.validUser) { 
+                    alert("Login successful! Redirecting...");
+                    window.location.href = "index.html"; // Redirect to dashboard
+                } else {
+                    alert("No valid data. Please check your email and password.");
+                }
+            } catch (error) {
+                alert("Server error. Please try again later.");
+            }
+        });
+    </script>
+    
+    
+</body>
+</html>
